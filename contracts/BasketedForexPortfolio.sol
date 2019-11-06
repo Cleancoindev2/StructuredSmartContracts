@@ -1,6 +1,6 @@
 //diversified currency basket generation
 
-contract synthMainInterface{
+contract synthetixDepotInterface{
     function minimumDepositAmount (  ) external view returns ( uint256 );
   function exchangeEtherForSynthsAtRate ( uint256 guaranteedRate ) external payable returns ( uint256 );
   function synthsReceivedForEther ( uint256 amount ) external view returns ( uint256 );
@@ -55,7 +55,7 @@ contract synthMainInterface{
   function setSynthetix ( address _synthetix ) external;
 }
 
-contract synthConvertInterface{
+contract synthetixInterface{
     function name (  ) external view returns ( string );
   function setGasPriceLimit ( uint256 _gasPriceLimit ) external;
   function approve ( address spender, uint256 value ) external returns ( bool );
@@ -157,8 +157,8 @@ library SafeMath {
     contract Portfolio1 {
 
        
-       synthMainInterface sInt = synthMainInterface(0x172e09691dfbbc035e37c73b62095caa16ee2388);
-       synthConvertInterface sInt2 = synthConvertInterface(0x42d03f506c2308ecd06ae81d8fa22352bc7a8f2b);
+       synthetixDepotInterface depot = synthetixDepotInterface(0x172e09691dfbbc035e37c73b62095caa16ee2388); // Depot may be upgraded in the future TODO: Make this a setter
+       synthetixInterface snx = synthetixInterface(0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F); // This is the SNX prixy contract so upgrades will nont be affected when usingn this Proxy address
 
       
         //sUSD code
@@ -195,11 +195,11 @@ library SafeMath {
 
             //100 percent for now
             uint256 amountEthUsing = msg.value;
-            sUSDBack = sInt.synthsReceivedForEther(amountEthUsing).mul(100).div(95);
-            sInt.exchangeEtherForSynths.value(amountEthUsing)();
-            //sInt2.exchange(sourceKey, sUSDBack, destKey ,msg.sender);
+            sUSDBack = depot.synthsReceivedForEther(amountEthUsing).mul(100).div(95);
+            depot.exchangeEtherForSynths.value(amountEthUsing)();
+            // snx.exchange(sourceKey, sUSDBack, destKey ,msg.sender);
 
-            //sInt.transferFrom ( this, msg.sender, sUSDBack); 
+            // sInt.transferFrom ( this, msg.sender, sUSDBack); 
 
 
          
